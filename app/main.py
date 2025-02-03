@@ -11,12 +11,19 @@ id_to_receipt = {}
 @app.route('/receipts/process', methods=['POST'])
 def process_receipts():
     data = request.get_json()
+    if not data:
+        return jsonify({"error": "Invalid JSON"}), 400
+    for field in ["retailer", "total", "items", "purchaseDate", "purchaseTime"]:
+        if field not in data:
+            return jsonify({"error": f"Missing field: {field}"}), 400
     id = str(uuid.uuid4())
     id_to_receipt[id] = data
     return jsonify({"id": id})
 
 @app.route('/receipts/<id>/points', methods=['GET'])
-def get_points(id):             
+def get_points(id):
+    if id not in id_to_receipt:
+        return jsonify({"error": "Receipt ID not found"}), 404
     receipt = id_to_receipt[id]
     pts = 0
     for c in receipt["retailer"]:

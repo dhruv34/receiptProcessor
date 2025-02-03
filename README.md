@@ -1,4 +1,4 @@
-# receiptProcessor
+# Receipt Processor
 
 1. Build Docker image: `docker build -t receipt-processor .`
 2. Run Docker container: `docker run -p 8000:8000 receipt-processor`
